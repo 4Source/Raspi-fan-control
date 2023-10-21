@@ -1,4 +1,5 @@
 #!/usr/bin/python
+#Version 0.5.0
 import os
 import time
 import RPi.GPIO as GPIO
@@ -6,7 +7,8 @@ import logging
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(14, GPIO.OUT)
-logging.basicConfig(filename='fancontrol.log', format='%(asctime)s %(message)s', encoding='utf-8', level=logging.DEBUG)
+FORMAT = '%(asctime)s %(levelname)s %(message)s'
+logging.basicConfig(filename='/var/log/fan-info.log', format=FORMAT, level=logging.INFO)
 
 #funktion: Temperatur mit Hilfe von vcgencmd auslesen und als Text zurueckliefern
 def getCPUtemperature():
@@ -17,20 +19,18 @@ def getCPUtemperature():
 temp_float = float(getCPUtemperature())
 
 try:
-    # temperatur > 47, dann Luefter an
-    if (temp_float > 47):
-        logging.info('%s power on fan...', temp_float)
+    # temperatur > 45, dann Luefter an
+    if temp_float > 45 and GPIO.input(14) != True:
+        logging.info('%s °C power on fan...', temp_float)
         # ein
         GPIO.output(14, True)
-    else:
-        logging.info('%s power off fan...', temp_float)
+    elif GPIO.input(14) != False:
+        logging.info('%s °C power off fan...', temp_float)
         # aus
-	GPIO.output(14, False)
-
+        GPIO.output(14, False)
+    # nothing changed
 
 # Wird das Programm abgebrochen, dann den Luefter wieder ausschalten
 except KeyboardInterrupt:
-    print(float(getCPUtemperature()))
-    print("power off fan...")
+    logging.warn('%s °C power off fan. Stopped by User! Cancelling...', float(getCPUtemperature()))
     GPIO.output(14, False)
-    print("cancelling...")
