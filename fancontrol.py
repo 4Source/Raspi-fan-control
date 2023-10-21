@@ -23,6 +23,7 @@ try:
         # ein
         GPIO.output(14, True)
     else:
+        logging.info('%s power off fan...', temp_float)
         # aus
 	GPIO.output(14, False)
 
