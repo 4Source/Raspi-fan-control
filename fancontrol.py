@@ -2,9 +2,11 @@
 import os
 import time
 import RPi.GPIO as GPIO
+import logging
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(14, GPIO.OUT)
+logging.basicConfig(filename='fancontrol.log', format='%(asctime)s %(message)s', encoding='utf-8', level=logging.DEBUG)
 
 #funktion: Temperatur mit Hilfe von vcgencmd auslesen und als Text zurueckliefern
 def getCPUtemperature():
@@ -17,16 +19,11 @@ temp_float = float(getCPUtemperature())
 try:
     # temperatur > 47, dann Luefter an
     if (temp_float > 47):
-        print(temp_float)
-	print("temp high")
-        print("power on fan...")
+        logging.info('%s power on fan...', temp_float)
         # ein
         GPIO.output(14, True)
     else:
-        print(temp_float)
-        print("temp low")
-	print("power off fan...")
-	# aus
+        # aus
 	GPIO.output(14, False)
 
 
