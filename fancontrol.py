@@ -18,18 +18,17 @@ try:
     # temperatur > 47, dann Luefter an
     if (temp_float > 47):
         print(temp_float)
+	print("temp high")
         print("power on fan...")
         # ein
         GPIO.output(14, True)
-        # und jetzt 58 Sekunden laufen lassen. (Das passt dann gut mit dem Minuten Timer)
-        time.sleep(58)
-        print("power off fan...")
-        # aus
-        GPIO.output(14, False)
-        print(float(getCPUtemperature()))
     else:
         print(temp_float)
         print("temp low")
+	print("power off fan...")
+	# aus
+	GPIO.output(14, False)
+
 
 # Wird das Programm abgebrochen, dann den Luefter wieder ausschalten
 except KeyboardInterrupt:
