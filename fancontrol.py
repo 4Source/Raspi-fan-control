@@ -36,11 +36,11 @@ def main():
 
     try:
         if args.test:
-            logging.warning('Test fan is functional!')
-            logging.info('Temperature: %s °C power on fan...', temp_float)
+            print('Testing fan is functional!')
+            print('Temperature: %s °C power on fan...', temp_float)
             GPIO.output(14, True)
             time.sleep(10)
-            logging.info('Temperature: %s °C power off fan...', temp_float)
+            print('Temperature: %s °C power off fan...', temp_float)
             GPIO.output(14, False)
         # Turn on fan of above turn on threshold
         elif temp_float > TEMPERATURE_ON and GPIO.input(14) != True:
