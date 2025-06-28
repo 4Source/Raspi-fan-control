@@ -19,7 +19,7 @@ def getCPUtemperature():
     """Read out the cpu temperature"""
     res = os.popen('vcgencmd measure_temp').readline()
     temp = res.replace("temp=","").replace("'C\n","")
-    return float(temp)
+    return temp
 
 def main():
     # Create argument parser
@@ -32,23 +32,24 @@ def main():
     args = parser.parse_args()
 
     # Read temperature
-    temp_float = getCPUtemperature()
+    temp = getCPUtemperature()
+    temp_float = float(temp)
 
     try:
         if args.test:
             print('Testing fan is functional!')
-            print('Temperature: %s °C power on fan...', temp_float)
+            print('Temperature: %s °C power on fan...', temp)
             GPIO.output(14, True)
             time.sleep(10)
-            print('Temperature: %s °C power off fan...', temp_float)
+            print('Temperature: %s °C power off fan...', temp)
             GPIO.output(14, False)
         # Turn on fan of above turn on threshold
         elif temp_float > TEMPERATURE_ON and GPIO.input(14) != True:
-            logging.info('Temperature: %s °C power on fan...', temp_float)
+            logging.info('Temperature: %s °C power on fan...', temp)
             GPIO.output(14, True)
         # Turn off fan if below turn off threshold
         elif GPIO.input(14) != False and temp_float < TEMPERATURE_OFF:
-            logging.info('Temperature: %s °C power off fan...', temp_float)
+            logging.info('Temperature: %s °C power off fan...', temp)
             GPIO.output(14, False)
         else:
             logging.info('Temperature: %s °C', temp_float)
@@ -57,7 +58,7 @@ def main():
     except KeyboardInterrupt:
         logging.info('Stopped by user...', float(getCPUtemperature()))
         if GPIO.input(14) != False:
-            logging.info('Temperature: %s °C power off fan...', temp_float)
+            logging.info('Temperature: %s °C power off fan...', temp)
             GPIO.output(14, False)
         logging.info('Fan control stopped!')
         
