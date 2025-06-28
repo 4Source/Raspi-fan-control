@@ -6,8 +6,8 @@ import RPi.GPIO as GPIO
 import logging
 import argparse
 
-TEMPERATURE_ON = 45
-TEMPERATURE_OFF = 40
+TEMPERATURE_ON = 60
+TEMPERATURE_OFF = 45
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
@@ -22,20 +22,21 @@ def getCPUtemperature():
     return temp
 
 def main():
-    # Create argument parser
-    parser = argparse.ArgumentParser(description='Raspberry Pi Fan Control')
-
-    # Add arguments
-    parser.add_argument('--test', '-t', action='store_true', help='Test the fan is functional')
-
-    # Parse arguments
-    args = parser.parse_args()
-
-    # Read temperature
-    temp = getCPUtemperature()
-    temp_float = float(temp)
-
     try:
+            
+        # Create argument parser
+        parser = argparse.ArgumentParser(description='Raspberry Pi Fan Control')
+
+        # Add arguments
+        parser.add_argument('--test', '-t', action='store_true', help='Test the fan is functional')
+
+        # Parse arguments
+        args = parser.parse_args()
+
+        # Read temperature
+        temp = getCPUtemperature()
+        temp_float = float(temp)
+
         if args.test:
             print('Testing fan is functional!')
             print('Temperature: %s °C power on fan...', temp)
@@ -61,6 +62,10 @@ def main():
             logging.info('Temperature: %s °C power off fan...', temp)
             GPIO.output(14, False)
         logging.info('Fan control stopped!')
+    
+    except Exception as e:
+        logging.error(e)
+
         
 if __name__ == "__main__":
     main()
