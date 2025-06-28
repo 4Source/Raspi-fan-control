@@ -3,23 +3,24 @@
 Clone the repository into ``/usr/local/bin``
 ```sh
 cd /usr/local/bin
-git clone https://github.com/4Source/Raspi-fan-control.git
+sudo git clone https://github.com/4Source/Raspi-fan-control.git
 ```
 
-### 2. Make Script executable
+### 2. Install requirements
+Create a virtual environment
 ```sh
 cd Raspi-fan-control
-chmod +x fancontrol.py
+sudo python3 -m venv .venv
+source .venv/bin/activate
 ```
 
-### 3. Install requirements
 ```sh
-pip install -r requirements.txt
+.venv/bin/pip install -r requirements.txt
 ```
 
 ### 3. Test the Script is working
 ```sh
-py fancontrol.py --test
+sudo .venv/bin/python3 fancontrol.py --test
 ```
 **Hint:** When the script is running the fan should turn for 10s and than stop again
 
@@ -30,10 +31,10 @@ Create a Systemd Unit ``/etc/systemd/system/fancontrol.service`` with the follow
 Description=Script to control the fan depending on the CPU temperature
 
 [Service]
-ExecStart=/usr/bin/python3 /usr/local/bin/Raspi-fan-control/fancontrol.py
+ExecStart=/usr/local/bin/Raspi-fan-control/.venv/bin/python3 /usr/local/bin/Raspi-fan-control/fancontrol.py
 User=<your-user-name>
 ```
-**Hint:** Make sure you replace ``<your-user-name>`` with your user name
+**Hint:** Make sure you replace ``<your-user-name>`` with your user name. For security reasons do not use root.
 
 Create a timer ``/etc/systemd/system/fancontrol.timer`` to let the script start ``5min`` after boot and than every ``10min`` to run again.
 ```ini
