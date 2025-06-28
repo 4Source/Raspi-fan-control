@@ -34,7 +34,9 @@ Create as sudo a Systemd Unit ``/etc/systemd/system/fancontrol.service`` with th
 Description=Script to control the fan depending on the CPU temperature
 
 [Service]
+ExecStartPre=/usr/bin/test ! -f /tmp/fan.lock
 ExecStart=/usr/local/bin/Raspi-fan-control/.venv/bin/python3 /usr/local/bin/Raspi-fan-control/fancontrol.py
+ExecStartPost=/bin/rm -f /tmp/fan.lock
 User=<your-user-name>
 ```
 **Hint:** Make sure you replace ``<your-user-name>`` with your user name. For security reasons do not use root.
@@ -47,6 +49,7 @@ Description=Timer for fancontrol
 [Timer]
 OnBootSec=5min
 OnUnitActiveSec=10min
+Persistent=false
 Unit=fancontrol.service
 
 [Install]
