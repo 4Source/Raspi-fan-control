@@ -3,7 +3,6 @@
 import os
 import time
 import RPi.GPIO as GPIO
-import logging
 import argparse
 
 TEMPERATURE_ON = 60
@@ -12,8 +11,6 @@ TEMPERATURE_OFF = 45
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(14, GPIO.OUT)
-FORMAT = '%(asctime)s %(levelname)s %(message)s'
-logging.basicConfig(filename='/var/log/fancontrol.log', format=FORMAT, level=logging.INFO)
 
 def getCPUtemperature():
     """Read out the cpu temperature"""
@@ -46,26 +43,24 @@ def main():
             GPIO.output(14, False)
         # Turn on fan of above turn on threshold
         elif temp_float > TEMPERATURE_ON and GPIO.input(14) != True:
-            logging.info('Temperature: %s °C power on fan...', temp)
+            print('Temperature: %s °C power on fan...', temp)
             GPIO.output(14, True)
         # Turn off fan if below turn off threshold
         elif GPIO.input(14) != False and temp_float < TEMPERATURE_OFF:
-            logging.info('Temperature: %s °C power off fan...', temp)
+            print('Temperature: %s °C power off fan...', temp)
             GPIO.output(14, False)
         else:
-            logging.info('Temperature: %s °C', temp_float)
+            print('Temperature: %s °C', temp_float)
 
     # If program is canceled turn off fan
     except KeyboardInterrupt:
-        logging.info('Stopped by user...', float(getCPUtemperature()))
+        print('Stopped by user...', float(getCPUtemperature()))
         if GPIO.input(14) != False:
-            logging.info('Temperature: %s °C power off fan...', temp)
+            print('Temperature: %s °C power off fan...', temp)
             GPIO.output(14, False)
-        logging.info('Fan control stopped!')
-    
-    except Exception as e:
-        logging.error(e)
-
+        print('Fan control stopped!')
+        exit(0)
         
 if __name__ == "__main__":
     main()
+    exit(0)
