@@ -6,7 +6,7 @@ import RPi.GPIO as GPIO
 import argparse
 
 TEMPERATURE_ON = 60
-TEMPERATURE_OFF = 45
+TEMPERATURE_OFF = 50
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
@@ -50,7 +50,7 @@ def main():
             print(f'Temperature: {temp} °C power off fan...')
             GPIO.output(14, False)
         else:
-            print(f'Temperature: {temp} °C')
+            print(f'Temperature: {temp} °C, Fan state: {'on' if GPIO.input(14) else 'off'}')
 
     # If program is canceled turn off fan
     except KeyboardInterrupt:
