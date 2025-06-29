@@ -36,27 +36,27 @@ def main():
 
         if args.test:
             print('Testing fan is functional!')
-            print('Temperature: %s °C power on fan...', temp)
+            print(f'Temperature: {temp} °C power on fan...')
             GPIO.output(14, True)
             time.sleep(10)
-            print('Temperature: %s °C power off fan...', temp)
+            print(f'Temperature: {temp} °C power off fan...')
             GPIO.output(14, False)
         # Turn on fan of above turn on threshold
         elif temp_float > TEMPERATURE_ON and GPIO.input(14) != True:
-            print('Temperature: %s °C power on fan...', temp)
+            print(f'Temperature: {temp} °C power on fan...')
             GPIO.output(14, True)
         # Turn off fan if below turn off threshold
         elif GPIO.input(14) != False and temp_float < TEMPERATURE_OFF:
-            print('Temperature: %s °C power off fan...', temp)
+            print(f'Temperature: {temp} °C power off fan...')
             GPIO.output(14, False)
         else:
-            print('Temperature: %s °C', temp_float)
+            print(f'Temperature: {temp} °C')
 
     # If program is canceled turn off fan
     except KeyboardInterrupt:
-        print('Stopped by user...', float(getCPUtemperature()))
+        print('Stopped by user...')
         if GPIO.input(14) != False:
-            print('Temperature: %s °C power off fan...', temp)
+            print(f'Temperature: {temp} °C power off fan...')
             GPIO.output(14, False)
         print('Fan control stopped!')
         exit(0)
